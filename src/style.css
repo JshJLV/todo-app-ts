@@ -79,7 +79,9 @@ body {
 .main-container {
   display: flex;
   flex-direction: column;
+  /* justify-content: center; */
   align-items: center;
+  /* width: 300px; */
   padding: 1.2rem;
   gap: 1.5rem;
   background-color: var(--gray50);
@@ -143,7 +145,7 @@ input[type="checkbox"] {
 
 /* task styles */
 .tasks {
-  min-width: 300px;
+  width: 300px;
   max-width: 300px;
   background-color: white;
   border-radius: 0.5rem;
@@ -165,6 +167,10 @@ input[type="checkbox"] {
   align-items: center;
   border-bottom: 1px solid var(--gray300);
 
+  &.is-hidden {
+    display: none;
+  }
+
   & > p {
     flex: 1;
     color: var(--navy850);
@@ -182,6 +188,10 @@ input[type="checkbox"] {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  & > svg {
+    pointer-events: none;
+  }
 
   &:hover {
     cursor: pointer;
@@ -241,4 +251,19 @@ input[type="checkbox"] {
 .attribution {
   display: flex;
   justify-content: center;
+}
+
+@media (width >= 640px) {
+  .form--inputs {
+    width: 500px;
+  }
+
+  .tasks {
+    width: 500px;
+    max-width: 500px;
+  }
+
+  .filters {
+    min-width: 500px;
+  }
 }
