@@ -1,5 +1,5 @@
 :root {
-  --primary-blue: hsl(220, 98%, 61%);
+  --filter-active: hsl(220, 98%, 61%);
   /* check button */
   --checkBackground: linear-gradient(
     120deg,
@@ -7,22 +7,19 @@
     hsl(280, 87%, 65%)
   );
   /* Light theme */
-  --gray50: hsl(0, 0%, 98%);
-  --purple300: hsl(234, 39%, 85%);
-  --gray300: hsl(233, 11%, 84%);
-  --gray600: hsl(236, 9%, 61%);
-  --navy850: hsl(235, 19%, 35%);
-  /* Dark theme */
-  --navy950: hsl(235, 21%, 11%);
-  --navy900: hsl(235, 24%, 19%);
-  --purple300: hsl(234, 39%, 85%);
-  --purple600: hsl(235, 16%, 43%);
-  --purple700: hsl(233, 14%, 35%);
-  --purple800: hsl(237, 14%, 26%);
-  --gray600: hsl(236, 9%, 61%);
+  --background-elements: hsl(0, 0, 100%);
+  --color-title: hsl(0, 3%, 93%);
+  --background: hsl(0, 0, 98%);
+  --borders: hsl(234, 39%, 85%);
+  --text-line-through: hsl(233, 11%, 84%);
+  --secondary-color: hsl(236, 9%, 61%);
+  --principal-text-color: hsl(235, 19%, 35%);
   /* hover */
   --purple100: hsl(236, 33%, 92%);
   --title-font-size: 18px;
+  --show-sun: block;
+  --show-moon: none;
+  --background-url: url("/src/images/bg-mobile-light.jpg");
 }
 /* - Weights: 400, 700 */
 
@@ -34,6 +31,24 @@
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: "JosefinSans";
+  src: url("/src/fonts/JosefinSans-VariableFont_wght.ttf") format("truetype");
+  font-style: normal;
+}
+
+:root[data-theme="dark"] {
+  --background-elements: hsl(235, 24%, 19%);
+  --background: hsl(235, 21%, 11%);
+  --color-title: hsl(235, 24%, 19%);
+  --text-line-through: hsl(233, 14%, 35%);
+  --secondary-color: hsl(235, 16%, 43%);
+  --principal-text-color: hsl(0, 0%, 98%);
+  --show-sun: none;
+  --show-moon: block;
+  --background-url: url("/src/images/bg-mobile-dark.jpg");
+}
+
 /* header styles */
 body {
   display: grid;
@@ -42,11 +57,25 @@ body {
 }
 
 .header {
-  background-image: url("/src/images/bg-mobile-light.jpg");
+  background-image: var(--background-url);
   background-repeat: no-repeat;
   background-size: cover;
   width: 100%;
   height: 250px;
+}
+
+.header--title {
+  color: var(--color-title);
+  font-family: "JosefinSans", Arial, Helvetica, sans-serif;
+  font-weight: 700;
+}
+
+#sun {
+  display: var(--show-sun);
+}
+
+#moon {
+  display: var(--show-moon);
 }
 
 .header-nav {
@@ -54,11 +83,11 @@ body {
   justify-content: space-between;
   padding: 1.2rem;
   margin-top: 1.2rem;
-  color: white;
+  color: var(--background);
 }
 
 .button--light-dark {
-  background-color: rgba(0, 0, 0, 0);
+  background-color: transparent;
   border: none;
   border-radius: 100%;
   width: 40px;
@@ -67,6 +96,10 @@ body {
   justify-content: center;
   align-items: center;
   transition: transform 0.3s;
+
+  & > svg {
+    pointer-events: none;
+  }
 
   &:hover {
     cursor: pointer;
@@ -84,11 +117,11 @@ body {
   /* width: 300px; */
   padding: 1.2rem;
   gap: 1.5rem;
-  background-color: var(--gray50);
+  background-color: var(--background);
 }
 
 .form--inputs {
-  background-color: white;
+  background-color: var(--background-elements);
   min-width: 300px;
   display: flex;
   gap: 0.5rem;
@@ -121,9 +154,8 @@ input[type="checkbox"] {
   width: 1.6rem;
   height: 1.6rem;
   border-radius: 100%;
-  border: 1px solid var(--gray300);
-  display: flex;
-  justify-content: center;
+  border: 1px solid var(--borders);
+  display: center;
   align-items: center;
 
   &:hover {
@@ -137,6 +169,8 @@ input[type="checkbox"] {
   border: none;
   background-color: transparent;
   font-size: 16px;
+  color: var(--principal-text-color);
+  font-family: "JosefinSans", Arial, Helvetica, sans-serif;
 
   &:focus {
     outline: none;
@@ -147,9 +181,9 @@ input[type="checkbox"] {
 .tasks {
   width: 300px;
   max-width: 300px;
-  background-color: white;
+  background-color: var(--background-elements);
   border-radius: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
 }
@@ -165,7 +199,7 @@ input[type="checkbox"] {
   font-size: 16px;
   padding: 0.75rem 1rem;
   align-items: center;
-  border-bottom: 1px solid var(--gray300);
+  border-bottom: 1px solid var(--borders);
 
   &.is-hidden {
     display: none;
@@ -173,12 +207,14 @@ input[type="checkbox"] {
 
   & > p {
     flex: 1;
-    color: var(--navy850);
+    color: var(--principal-text-color);
+    font-family: "JosefinSans", Arial, Helvetica, sans-serif;
+    font-weight: 400;
   }
 
   & > p.task-completed {
     text-decoration: line-through;
-    color: var(--gray600);
+    color: var(--text-line-through);
   }
 }
 
@@ -202,16 +238,19 @@ input[type="checkbox"] {
   display: flex;
   justify-content: space-between;
   padding: 0.75rem 1rem;
+  position: relative;
+  font-family: "JosefinSans", Arial, Helvetica, sans-serif;
 }
 
 .task--pending {
-  color: var(--gray600);
+  color: var(--secondary-color);
 }
 
 .task--clear-btn {
-  color: var(--gray600);
+  color: var(--secondary-color);
   background: none;
   border: none;
+  font-family: "JosefinSans", Arial, Helvetica, sans-serif;
 
   &:hover {
     cursor: pointer;
@@ -220,30 +259,34 @@ input[type="checkbox"] {
 }
 
 .filters {
-  background-color: white;
+  background-color: var(--background-elements);
   padding: 0.75rem 1rem;
   min-width: 300px;
   display: flex;
   justify-content: center;
   gap: 1rem;
   border-radius: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  top: 4rem;
+  left: 0;
 }
 
 .filters-button {
   background: none;
   border: none;
   font-weight: 700;
-  color: var(--gray600);
+  color: var(--secondary-color);
   transition: 0.3s;
+  font-family: "JosefinSans", Arial, Helvetica, sans-serif;
 
   &:hover {
     cursor: pointer;
-    color: var(--navy850);
+    color: var(--principal-text-color);
   }
 
   &.active {
-    color: var(--primary-blue);
+    color: var(--filter-active);
   }
 }
 
@@ -251,9 +294,24 @@ input[type="checkbox"] {
 .attribution {
   display: flex;
   justify-content: center;
+  background-color: var(--background);
+  color: var(--principal-text-color);
+
+  & > a {
+    text-decoration: none;
+    color: var(--filter-active);
+  }
 }
 
 @media (width >= 640px) {
+  :root {
+    --background-url: url("/src/images/bg-desktop-light.jpg");
+  }
+
+  :root[data-theme="dark"] {
+    --background-url: url("/src/images/bg-desktop-dark.jpg");
+  }
+
   .form--inputs {
     width: 500px;
   }
@@ -264,6 +322,9 @@ input[type="checkbox"] {
   }
 
   .filters {
-    min-width: 500px;
+    padding: 0;
+    box-shadow: none;
+    min-width: auto;
+    position: static;
   }
 }

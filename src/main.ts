@@ -5,6 +5,7 @@ const todoList = document.querySelector(".to-do-list") as HTMLDivElement;
 const clearTodos = document.querySelector("#clear-tasks") as HTMLButtonElement;
 const filters = document.querySelector("#filters") as HTMLDivElement;
 const counterTasks = document.querySelector("#counter-tasks") as HTMLSpanElement;
+const darkLightMode = document.querySelector("#button-light-dark") as HTMLButtonElement;
 
 interface TaskData {
   task: string;
@@ -18,7 +19,7 @@ const state = {
 const handleForm = (e: Event) => {
   e.preventDefault()
   if(e.target instanceof HTMLFormElement) {
-    const data = Object.fromEntries(new FormData(e.target))
+    const data = Object.fromEntries(new FormData(e.target)) as unknown as TaskData
     if(!data.task) return
     addTask(data);
   }
@@ -31,7 +32,6 @@ const addTask = (data: TaskData) => {
   let taskCompleted = false
   if(data["checkbox-task"] == "on"){
     taskCompleted = true
-    counter(taskCompleted)
   }
 
   task.innerHTML = `
@@ -52,6 +52,8 @@ const addTask = (data: TaskData) => {
           `
   if(todoList instanceof HTMLDivElement) {
     todoList.appendChild(task);
+    state.completedTasksCounter += 1
+    updateCounter();
   }
   clearForm();
 }
@@ -65,6 +67,8 @@ const handleState = (e: Event) => {
 
   if(element instanceof HTMLButtonElement){
     element.parentElement?.remove()
+    state.completedTasksCounter -= 1
+    updateCounter();
   }
 }
 
@@ -78,8 +82,12 @@ const deleteCompletedTasks = () => {
   if(tasksList.length == 0) return
   tasksList.forEach(task => {
     let inputChecked = task.firstElementChild?.children[0] as HTMLInputElement
-    inputChecked.checked ? task.remove() : "";
+    if(inputChecked.checked) {
+      task.remove()
+      state.completedTasksCounter -= 1
+    }
   })
+  updateCounter();
 }
 
 const filterTasks = (e: Event) => {
@@ -118,13 +126,18 @@ const filterTasks = (e: Event) => {
   }
 }
 
-const counter = (taskCompleted: boolean) => {
-  state.completedTasksCounter = !taskCompleted ? 
-                                state.completedTasksCounter + 1 
-                              : state.completedTasksCounter - 1
-
+const updateCounter = () => {
   counterTasks.textContent = `${state.completedTasksCounter}`
 }
+
+const toggleTheme = () => {
+  const root = document.documentElement;
+  const currTheme = root.getAttribute("data-theme");
+  const newTheme = currTheme == "dark" ? "light" : "dark"
+  root.setAttribute("data-theme", newTheme);
+}
+
+darkLightMode.addEventListener("click", toggleTheme)
 
 form.addEventListener("submit", handleForm)
 todoList.addEventListener("click", handleState)
