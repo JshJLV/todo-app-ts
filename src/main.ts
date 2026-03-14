@@ -8,8 +8,8 @@ const counterTasks = document.querySelector("#counter-tasks") as HTMLSpanElement
 const darkLightMode = document.querySelector("#button-light-dark") as HTMLButtonElement;
 
 interface TaskData {
-  task: string;
   'checkbox-task'?: string;
+  task: string
 }
 
 const state = {
@@ -18,8 +18,9 @@ const state = {
 
 const handleForm = (e: Event) => {
   e.preventDefault()
-  if(e.target instanceof HTMLFormElement) {
-    const data = Object.fromEntries(new FormData(e.target)) as unknown as TaskData
+  const element = e.target
+  if(element instanceof HTMLFormElement) {
+    const data = Object.fromEntries(new FormData(element)) as unknown as TaskData
     if(!data.task) return
     addTask(data);
   }
@@ -138,7 +139,6 @@ const toggleTheme = () => {
 }
 
 darkLightMode.addEventListener("click", toggleTheme)
-
 form.addEventListener("submit", handleForm)
 todoList.addEventListener("click", handleState)
 clearTodos.addEventListener("click", deleteCompletedTasks)
