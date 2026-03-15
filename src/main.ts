@@ -1,3 +1,5 @@
+import { Task } from "./tasks";
+
 const form = document.querySelector("#form") as HTMLFormElement
 const checkboxInput = document.querySelector("#checkbox-task") as HTMLInputElement;
 const textInput = document.querySelector("#input-task") as HTMLInputElement;
@@ -22,25 +24,21 @@ const handleForm = (e: Event) => {
   if(element instanceof HTMLFormElement) {
     const data = Object.fromEntries(new FormData(element)) as unknown as TaskData
     if(!data.task) return
-    addTask(data);
+    const newTask = new Task(data.task, data["checkbox-task"] == 'on')
+    addTask(newTask);
   }
 }
 
-const addTask = (data: TaskData) => {
-  const task = document.createElement("div");
-  task.classList.add("task");
-  let id = crypto.randomUUID()
-  let taskCompleted = false
-  if(data["checkbox-task"] == "on"){
-    taskCompleted = true
-  }
+const addTask = (newTask: Task) => {
+  const taskContainer = document.createElement("div");
+  taskContainer.classList.add("task");
 
-  task.innerHTML = `
+  taskContainer.innerHTML = `
             <div class="wrapper-checkbox">
-              <input type="checkbox" name="${id}" id="${id}" ${taskCompleted ? "checked" : ""}/>
-              <label for="${id}" class="checkbox-label"></label>
+              <input type="checkbox" name="${newTask.id}" id="${newTask.id}" ${newTask.taskCompleted ? "checked" : ""}/>
+              <label for="${newTask.id}" class="checkbox-label"></label>
             </div>
-            <p id="task-content" class="task--content ${taskCompleted ? "task-completed" : ''}">${data.task}</p>
+            <p id="task-content" class="task--content ${newTask.taskCompleted ? "task-completed" : ''}">${newTask.task}</p>
             <button id="delete-task" class="delete--task">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
                 <path
@@ -52,7 +50,7 @@ const addTask = (data: TaskData) => {
             </button>
           `
   if(todoList instanceof HTMLDivElement) {
-    todoList.appendChild(task);
+    todoList.appendChild(taskContainer);
     state.completedTasksCounter += 1
     updateCounter();
   }
@@ -61,6 +59,7 @@ const addTask = (data: TaskData) => {
 
 const handleState = (e: Event) => {
   const element = e.target
+  console.log(element)
   if(element instanceof HTMLInputElement){
     let taskContent = element.parentElement?.nextElementSibling
     taskContent?.classList.toggle("task-completed");
@@ -134,7 +133,8 @@ const updateCounter = () => {
 const toggleTheme = () => {
   const root = document.documentElement;
   const currTheme = root.getAttribute("data-theme");
-  const newTheme = currTheme == "dark" ? "light" : "dark"
+  const newTheme = currTheme == "dark" ? "light" : "dark";
+  localStorage.setItem("theme", newTheme);
   root.setAttribute("data-theme", newTheme);
 }
 
@@ -143,3 +143,10 @@ form.addEventListener("submit", handleForm)
 todoList.addEventListener("click", handleState)
 clearTodos.addEventListener("click", deleteCompletedTasks)
 filters.addEventListener("click", filterTasks)
+document.addEventListener("DOMContentLoaded", () => {
+  const themeSaved = localStorage.getItem("theme");
+  if(themeSaved){
+    const root = document.documentElement;
+    root.setAttribute("data-theme", themeSaved);
+  }
+})
