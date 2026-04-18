@@ -40,6 +40,7 @@
 :root[data-theme="dark"] {
   --background-elements: hsl(235, 24%, 19%);
   --background: hsl(235, 21%, 11%);
+  --borders: hsl(233, 14%, 35%);
   --color-title: hsl(235, 24%, 19%);
   --text-line-through: hsl(233, 14%, 35%);
   --secondary-color: hsl(235, 16%, 43%);
@@ -205,6 +206,14 @@ input[type="checkbox"] {
     display: none;
   }
 
+  & > .delete--task {
+    display: none;
+  }
+
+  &:hover > .delete--task {
+    display: flex;
+  }
+
   & > p {
     flex: 1;
     color: var(--principal-text-color);
@@ -221,7 +230,6 @@ input[type="checkbox"] {
 .delete--task {
   background-color: transparent;
   border: none;
-  display: flex;
   justify-content: center;
   align-items: center;
 
@@ -251,10 +259,12 @@ input[type="checkbox"] {
   background: none;
   border: none;
   font-family: "JosefinSans", Arial, Helvetica, sans-serif;
+  transition: 0.3s;
 
   &:hover {
     cursor: pointer;
     text-decoration: underline;
+    color: var(--principal-text-color);
   }
 }
 
