@@ -1,16 +1,22 @@
 import { Task } from "./models/tasks-model";
 import type { State } from "./interfaces/interfaces";
 
-const state: State = {
-  tasks: [],
-  counter: 0,
-  filterActive: "all",
-};
-
-const filters = {
+const FILTERS_KEYS = {
   all: "all",
   active: "active",
   completed: "completed",
+};
+
+const STORAGE_KEYS = {
+  tasks: "tasks",
+  filter: "filter",
+  theme: "theme",
+};
+
+const state: State = {
+  tasks: [],
+  counter: 0,
+  filterActive: FILTERS_KEYS.all,
 };
 
 const createTask = (taskDescription: string, taskPending: boolean) => {
@@ -43,9 +49,9 @@ const setFilter = (filter: string) => {
 const getFilteredTasks = () => {
   const { tasks, filterActive } = state;
 
-  if (filterActive === filters.active) {
+  if (filterActive === FILTERS_KEYS.active) {
     return tasks.filter((task) => !task.taskCompleted);
-  } else if (filterActive === filters.completed) {
+  } else if (filterActive === FILTERS_KEYS.completed) {
     return tasks.filter((task) => task.taskCompleted);
   }
 
@@ -65,6 +71,7 @@ const deleteTask = (id: string) => {
 const deleteCompleted = () => {
   state.tasks = state.tasks.filter((task) => !task.taskCompleted);
   saveOnLocalStorage();
+  updateCounter();
 };
 
 const getTasks = () => state.tasks;
@@ -75,16 +82,16 @@ const toggleTheme = () => {
   const root = document.documentElement;
   const currTheme = root.getAttribute("data-theme");
   const newTheme = currTheme == "dark" ? "light" : "dark";
-  localStorage.setItem("theme", newTheme);
+  localStorage.setItem(STORAGE_KEYS.theme, newTheme);
   root.setAttribute("data-theme", newTheme);
 };
 
 const saveOnLocalStorage = () => {
-  localStorage.setItem("tasks", JSON.stringify(state.tasks));
+  localStorage.setItem(STORAGE_KEYS.tasks, JSON.stringify(state.tasks));
 };
 
 const loadTasksFromStorage = () => {
-  const stored = localStorage.getItem("tasks");
+  const stored = localStorage.getItem(STORAGE_KEYS.tasks);
   if (stored) {
     state.tasks = JSON.parse(stored) as Task[];
   }
@@ -92,7 +99,7 @@ const loadTasksFromStorage = () => {
 };
 
 const loadFilterFromStorage = () => {
-  const filterSaved = localStorage.getItem("filter");
+  const filterSaved = localStorage.getItem(STORAGE_KEYS.filter);
   if (filterSaved) {
     state.filterActive = filterSaved;
   }
@@ -102,7 +109,7 @@ const loadLocalStorage = () => {
   loadTasksFromStorage();
   loadFilterFromStorage();
 
-  const themeSaved = localStorage.getItem("theme");
+  const themeSaved = localStorage.getItem(STORAGE_KEYS.theme);
   if (themeSaved) {
     const root = document.documentElement;
     root.setAttribute("data-theme", themeSaved);

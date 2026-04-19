@@ -66,7 +66,6 @@ const delTask = (element: HTMLButtonElement) => {
     Store.deleteTask(id);
     renderTasks();
   }
-  updateCompleted();
 };
 
 const deleteCompletedTasks = () => {
@@ -88,7 +87,7 @@ const updateCompleted = () => {
   counter.textContent = `${Store.getCount()}`;
 };
 
-const setFilter = () => {
+const syncFilterUI = () => {
   filterButtons.forEach((btn) => {
     if (btn instanceof HTMLButtonElement && btn.value === Store.getFilter()) {
       btn.classList.add("active");
@@ -111,6 +110,6 @@ filters.addEventListener("click", filterTasks);
 document.addEventListener("DOMContentLoaded", () => {
   Store.loadLocalStorage();
   updateCompleted();
-  setFilter();
+  syncFilterUI();
   renderTasks();
 });
