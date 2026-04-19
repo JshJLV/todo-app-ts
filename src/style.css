@@ -21,7 +21,6 @@
   --show-moon: none;
   --background-url: url("/src/images/bg-mobile-light.webp");
 }
-/* - Weights: 400, 700 */
 
 /* reset styles */
 
@@ -35,6 +34,7 @@
   font-family: "JosefinSans";
   src: url("/src/fonts/JosefinSans-VariableFont_wght.ttf") format("truetype");
   font-style: normal;
+  font-display: swap;
 }
 
 :root[data-theme="dark"] {
@@ -342,6 +342,15 @@ input[type="checkbox"] {
     max-width: 500px;
     min-width: auto;
     position: static;
+  }
+}
+
+@media (width >= 1024px) {
+  .header-nav,
+  .form--inputs,
+  .tasks,
+  .filters {
+    max-width: 600px;
   }
 }
 
