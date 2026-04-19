@@ -3,7 +3,7 @@ import type { Task } from "../models/tasks-model";
 export const createHtml = (newTask: Task) => {
   const taskWrapper = document.createElement("div");
   taskWrapper.classList.add("task");
-  taskWrapper.setAttribute("data-id", newTask.id)
+  taskWrapper.setAttribute("data-id", newTask.id);
   taskWrapper.innerHTML = `
     <div class="wrapper-checkbox">
       <input type="checkbox" name="${newTask.id}" id="${newTask.id}" ${newTask.taskCompleted ? "checked" : ""}/>
